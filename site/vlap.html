@@ -223,18 +223,24 @@
   .intro-live-link {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    min-width: 168px;
+    height: 58px;
+    padding: 0 24px;
+    flex-basis: auto;
+    margin-top: 20px;
+    background: #242452;
+    border: none;
+    border-bottom: none;
     font-family: var(--mono);
     font-size: 10px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--deep-green);
+    color: var(--warm-white);
     text-decoration: none;
-    border-bottom: 1px solid rgba(45,74,62,0.35);
-    padding-bottom: 3px;
+    transition: background 0.22s;
   }
-  .intro-live-link::after { content: '\2197'; font-size: 11px; }
-  .intro-live-link:hover { color: var(--clay); border-bottom-color: var(--clay); }
+  .intro-live-link:hover { background: var(--deep-green); color: var(--warm-white); }
 
   .intro-right {
     padding-left: 80px;
