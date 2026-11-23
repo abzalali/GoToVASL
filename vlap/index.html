@@ -334,7 +334,7 @@ async function run(){
   if(!t){document.getElementById('vlap-ta').focus();return;}
   load(true);
   try{
-    var r=await fetch('/.netlify/functions/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})});
+    var r=await fetch('/api/functions/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})});
     if(!r.ok){var e={};try{e=await r.json();}catch(x){}err('API error '+r.status+': '+(e.error||'Please try again.'));load(false);return;}
     var data=await r.json();
     if(data&&typeof data.risk_score!=='undefined'&&data.risk_tier){render(data);load(false);return;}
