@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<title>VLAP Live Demo &mdash; Vasl Health</title>
+<meta name="description" content="VLAP detects culturally-specific mental health distress signals in real time. 198,000+ training samples. 2,400+ AAVE and youth vernacular tokens.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --warm:#FAF7F2;--parchment:#F0EAE0;--chalk:#E2DAD0;--ink:#1C1C1C;
+  --ink-70:rgba(28,28,28,0.82);--ink-40:rgba(28,28,28,0.62);--ink-20:rgba(28,28,28,0.52);
+  --clay:#C4896F;--clay-pale:#F5E6DC;--deep-green:#2D4A3E;--dust:#5C4F45;--charcoal:#222222;
+  --sha-bg:rgba(160,48,56,0.07);--sha-bd:rgba(160,48,56,0.22);--sha-tx:#903038;
+  --crs-bg:rgba(170,88,40,0.07);--crs-bd:rgba(170,88,40,0.22);--crs-tx:#905030;
+  --hop-bg:rgba(180,120,90,0.09);--hop-bd:rgba(180,120,90,0.26);--hop-tx:#7A4830;
+  --iso-bg:rgba(48,96,136,0.07);--iso-bd:rgba(48,96,136,0.22);--iso-tx:#285878;
+  --ccm-bg:rgba(35,98,80,0.07);--ccm-bd:rgba(35,98,80,0.22);--ccm-tx:#1A5848;
+  --serif:'Newsreader',Georgia,serif;--sans:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace;
+  --r:5vw;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{background:var(--warm);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px var(--r);border-bottom:1px solid var(--chalk);background:rgba(250,247,242,0.96);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;}
+.nav-logo{font-family:var(--serif);font-size:20px;font-weight:300;color:var(--ink);text-decoration:none;letter-spacing:-0.02em;white-space:nowrap;}
+.nav-logo span{color:var(--clay);font-style:italic;}
+.nav-mid{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dust);display:none;}
+.live-pill{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:0.10em;text-transform:uppercase;color:var(--deep-green);border:1px solid rgba(45,74,62,0.25);padding:7px 14px;white-space:nowrap;flex-shrink:0;}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--deep-green);animation:pulse 2s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.2}}
+
+/* ── HERO ── */
+.hero{padding:48px var(--r) 44px;border-bottom:1px solid var(--chalk);}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;max-width:1200px;}
+.eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--clay);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.eyebrow::before{content:'';display:block;width:18px;height:1px;background:var(--clay);flex-shrink:0;}
+.hero-h1{font-family:var(--serif);font-size:clamp(30px,4vw,54px);font-weight:300;line-height:1.07;letter-spacing:-0.03em;margin-bottom:16px;}
+.hero-h1 em{font-style:italic;color:var(--clay);}
+.hero-p{font-size:15px;font-weight:300;color:var(--ink-70);line-height:1.78;max-width:480px;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--chalk);}
+.stat{padding:18px;border-right:1px solid var(--chalk);border-bottom:1px solid var(--chalk);}
+.stat:nth-child(2n){border-right:none;}
+.stat:nth-child(3),.stat:nth-child(4){border-bottom:none;}
+.stat-n{font-family:var(--serif);font-size:30px;font-weight:300;color:var(--ink);line-height:1;letter-spacing:-0.04em;margin-bottom:5px;}
+.stat-l{font-family:var(--mono);font-size:8px;letter-spacing:0.10em;text-transform:uppercase;color:var(--dust);}
+
+/* ── DEMO ── */
+.demo{padding:40px var(--r) 72px;}
+.demo-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--clay);margin-bottom:22px;display:flex;align-items:center;gap:10px;}
+.demo-eyebrow::before{content:'';display:block;width:18px;height:1px;background:var(--clay);flex-shrink:0;}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--chalk);}
+.pane{padding:24px;}
+.pane-left{border-right:1px solid var(--chalk);}
+.pane-head{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dust);padding-bottom:14px;border-bottom:1px solid var(--chalk);margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;}
+.pane-hint{font-family:var(--mono);font-size:8px;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-20);}
+
+/* ── SCENARIOS ── */
+.strip{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.sc-btn{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;text-transform:uppercase;padding:7px 12px;border:1px solid var(--chalk);background:transparent;color:var(--ink-40);cursor:pointer;transition:all 0.12s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:36px;}
+.sc-btn:hover,.sc-btn:focus{border-color:var(--clay);color:var(--clay);outline:none;}
+.sc-btn.on{border-color:var(--clay);color:var(--deep-green);background:var(--clay-pale);}
+.sc-div{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--clay);width:100%;padding:10px 0 4px;border-top:1px solid var(--chalk);margin-top:6px;}
+
+/* ── INPUT ── */
+.vlap-ta{width:100%;min-height:110px;padding:14px 15px;background:var(--parchment);border:1px solid var(--chalk);font-family:var(--sans);font-size:15px;font-weight:300;color:var(--ink);resize:vertical;outline:none;line-height:1.72;transition:border-color 0.18s;-webkit-appearance:none;}
+.vlap-ta:focus{border-color:var(--clay);}
+.vlap-ta::placeholder{color:var(--ink-20);}
+.run-btn{width:100%;margin-top:12px;padding:16px;background:var(--deep-green);border:none;color:var(--warm);font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;display:flex;align-items:center;justify-content:center;gap:10px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:50px;}
+.run-btn:hover:not(:disabled),.run-btn:focus:not(:disabled){background:#3A6052;outline:none;}
+.run-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.caveat{margin-top:10px;font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(28,28,28,0.55);line-height:1.75;text-align:center;}
+.spinner{width:13px;height:13px;border:1.5px solid rgba(250,247,242,0.3);border-top-color:var(--warm);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── RESULTS ── */
+.placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:340px;gap:14px;text-align:center;opacity:0.3;}
+.ph-v{font-family:var(--serif);font-size:48px;font-weight:300;color:var(--clay);font-style:italic;}
+.ph-t{font-family:var(--mono);font-size:8px;letter-spacing:0.10em;text-transform:uppercase;color:var(--dust);line-height:1.9;}
+.res-time{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-20);}
+.risk-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--chalk);flex-wrap:wrap;}
+.risk-track{flex:1;min-width:80px;height:5px;background:var(--chalk);}
+.risk-fill{height:100%;transition:width 0.9s cubic-bezier(0.16,1,0.3,1),background 0.9s;}
+.risk-score{font-family:var(--serif);font-size:28px;font-weight:300;min-width:44px;text-align:right;line-height:1;letter-spacing:-0.03em;}
+.tier-pill{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 12px;border:1px solid;white-space:nowrap;}
+.sig-lbl{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--dust);margin-bottom:8px;}
+.sigs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;}
+.sig{font-family:var(--mono);font-size:8px;letter-spacing:0.04em;padding:4px 10px;border:1px solid;}
+.sig-sha{background:var(--sha-bg);border-color:var(--sha-bd);color:var(--sha-tx);}
+.sig-crs{background:var(--crs-bg);border-color:var(--crs-bd);color:var(--crs-tx);}
+.sig-hop{background:var(--hop-bg);border-color:var(--hop-bd);color:var(--hop-tx);}
+.sig-iso{background:var(--iso-bg);border-color:var(--iso-bd);color:var(--iso-tx);}
+.sig-ccm{background:var(--ccm-bg);border-color:var(--ccm-bd);color:var(--ccm-tx);}
+.sig-none{background:var(--parchment);border-color:var(--chalk);color:var(--dust);}
+.ibox{padding:12px 15px;border-left:2px solid;margin-bottom:10px;background:var(--parchment);}
+.ibox-lbl{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;}
+.ibox-txt{font-size:14px;font-weight:300;line-height:1.72;color:var(--ink-70);}
+.ibox-c{border-color:var(--ccm-tx);}
+.ibox-c .ibox-lbl{color:var(--ccm-tx);}
+.ibox-m{border-color:var(--chalk);}
+.ibox-m .ibox-lbl{color:var(--dust);}
+.abox{padding:12px 15px;border:1px solid;display:flex;align-items:flex-start;gap:8px;font-size:13px;font-weight:300;line-height:1.6;}
+.ac-crisis{background:var(--sha-bg);border-color:var(--sha-bd);color:var(--sha-tx);}
+.ac-high{background:var(--crs-bg);border-color:var(--crs-bd);color:var(--crs-tx);}
+.ac-moderate{background:var(--hop-bg);border-color:var(--hop-bd);color:var(--hop-tx);}
+.ac-clear{background:var(--ccm-bg);border-color:var(--ccm-bd);color:var(--ccm-tx);}
+.ebox{padding:12px 15px;border-left:2px solid var(--sha-tx);background:var(--sha-bg);color:var(--sha-tx);font-size:13px;font-weight:300;margin-bottom:10px;}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--chalk);padding:28px var(--r);background:var(--charcoal);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.f-logo{font-family:var(--serif);font-size:18px;font-weight:300;color:var(--warm);letter-spacing:-0.02em;}
+.f-logo span{color:var(--clay);font-style:italic;}
+.f-copy{font-family:var(--mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(250,247,242,0.45);margin-top:4px;}
+.f-links{display:flex;gap:16px;flex-wrap:wrap;}
+.f-links a{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(250,247,242,0.55);text-decoration:none;}
+
+/* ── RESPONSIVE ── */
+@media(min-width:900px){.nav-mid{display:block;}}
+
+@media(max-width:899px){
+  .hero-inner{grid-template-columns:1fr;gap:32px;}
+  .demo-grid{grid-template-columns:1fr;}
+  .pane-left{border-right:none;border-bottom:1px solid var(--chalk);}
+  .placeholder{min-height:200px;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+}
+
+@media(max-width:599px){
+  :root{--r:4vw;}
+  nav{padding:14px var(--r);}
+  .nav-logo{font-size:18px;}
+  .live-pill{padding:6px 12px;font-size:8px;}
+  .hero{padding:36px var(--r) 36px;}
+  .hero-h1{font-size:clamp(28px,8vw,38px);}
+  .hero-p{font-size:14px;}
+  .demo{padding:32px var(--r) 56px;}
+  .pane{padding:18px;}
+  .sc-btn{font-size:8px;padding:8px 11px;min-height:38px;}
+  .strip{gap:5px;}
+  .vlap-ta{font-size:16px;} /* 16px prevents iOS zoom */
+  .run-btn{padding:18px;font-size:10px;min-height:54px;}
+  .stat{padding:14px;}
+  .stat-n{font-size:26px;}
+  footer{flex-direction:column;align-items:flex-start;gap:16px;}
+}
+
+@media(max-width:380px){
+  .stats-grid{grid-template-columns:1fr;}
+  .stat:nth-child(n){border-right:none;border-bottom:1px solid var(--chalk);}
+  .stat:last-child{border-bottom:none;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://gotovasl.com" class="nav-logo">Vasl <span>Health</span></a>
+  <div class="nav-mid">VLAP &mdash; Vasl Language Analysis Platform</div>
+  <div class="live-pill"><div class="pulse"></div>Live Demo</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Clinical Signal Detection</div>
+      <h1 class="hero-h1">The AI that reads<br>what standard systems<br><em>always missed.</em></h1>
+      <p class="hero-p">VLAP is trained on how BIPOC, LGBTQ+, and underserved youth actually communicate distress &mdash; not how clinical instruments assume they do. Built for the populations standard tools consistently fail to see.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-n">198k+</div><div class="stat-l">Training samples</div></div>
+      <div class="stat"><div class="stat-n">2,400+</div><div class="stat-l">AAVE &amp; vernacular tokens</div></div>
+      <div class="stat"><div class="stat-n">42</div><div class="stat-l">Signal codes</div></div>
+      <div class="stat"><div class="stat-n">5</div><div class="stat-l">Signal dimensions</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="demo">
+  <div class="demo-eyebrow">Live Analysis</div>
+  <div class="demo-grid">
+
+    <div class="pane pane-left">
+      <div class="pane-head">
+        <span>Input</span>
+        <span class="pane-hint" id="kbd-hint">&#8984;+Enter to analyze</span>
+      </div>
+      <div class="strip" id="strip"></div>
+      <textarea class="vlap-ta" id="vlap-ta" placeholder="Type a message or choose a scenario above&hellip;" rows="5"></textarea>
+      <button class="run-btn" id="run-btn" onclick="run()">
+        <span id="btn-txt">Analyze with VLAP &rarr;</span>
+      </button>
+      <div class="caveat">VLAP surfaces signals to licensed clinicians only &mdash; not visible to members. API key is server-side only.</div>
+    </div>
+
+    <div class="pane">
+      <div class="pane-head">
+        <span>VLAP Signal Output</span>
+        <span class="res-time" id="res-time"></span>
+      </div>
+      <div id="out">
+        <div class="placeholder">
+          <div class="ph-v">V</div>
+          <div class="ph-t">Risk tier &mdash; Signal codes &mdash; Cultural context<br>Clinician action &mdash; Member response draft</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div>
+    <div class="f-logo">Vasl <span>Health</span></div>
+    <div class="f-copy">&copy; 2026 Vasl Health, Inc. &mdash; Delaware Public Benefit Corporation</div>
+  </div>
+  <div class="f-links">
+    <a href="https://gotovasl.com/technology">VLAP Overview</a>
+    <a href="https://gotovasl.com/clinical-outcomes">Outcomes</a>
+    <a href="https://gotovasl.com/contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+// Detect touch device — update keyboard hint
+if('ontouchstart' in window){
+  var h=document.getElementById('kbd-hint');
+  if(h) h.textContent='Tap Analyze to run';
+}
+
+var S=[
+  {l:'Coded ideation',t:'been thinking about unaliving lately ngl i dont even know why im still here'},
+  {l:'AAVE hopelessness',t:'idk why i even try anymore tbh, can\'t keep doing this no more fr fr'},
+  {l:'Pre-disclosure',t:'it\'s not that deep but lowkey been struggling since school started'},
+  {l:'Family stigma',t:'my parents don\'t believe in therapy, it\'s not how we were raised and they think i\'m just being dramatic'},
+  {l:'Isolation',t:'haven\'t talked to anyone in like 3 weeks. been staying in my room. it\'s fine i guess'},
+  {l:'Positive control',t:'had a really good session today, feeling way better about everything honestly'},
+  {divider:true,l:'Urban Populations'},
+  {l:'\uD83C\uDFEB HBCU Student',t:'lowkey feeling like i don\'t fit in even here. thought college was supposed to be different but i still feel like i gotta perform all the time. just exhausted'},
+  {l:'\uD83C\uDF06 Urban Latinx Teen',t:'my parents are scared about everything right now. i can\'t bring more stress home. been keeping everything inside. don\'t have nobody i can really talk to'},
+  {l:'\uD83C\uDF83 Young Black Male',t:'ion really talk about feelings like that. but been having thoughts i don\'t know what to do with. just been moving different lately. feel real disconnected from everything'},
+  {divider:true,l:'Rural Populations'},
+  {l:'\uD83C\uDFD4\uFE0F Appalachian Teen',t:'nobody around here talks about this stuff. you just deal with it. been real tired lately and i don\'t see the point in much anymore'},
+  {l:'\uD83C\uDFE0 Rural Foster Youth',t:'been moved around so many times idc anymore. feel like im just waiting for the next bad thing to happen. nobody stays anyway'},
+  {l:'\uD83C\uDF3E Agricultural Community',t:'my dad lost the farm. whole family is stressed all the time. i just stay in my room. don\'t wanna make things worse for anyone'},
+  {l:'\uD83C\uDFF3\uFE0F\u200D\uD83C\uDF08 Rural LGBTQIA+ Teen',t:'can\'t be myself here. my whole town would never understand. been feeling real alone and like nowhere is safe for me to just exist'},
+  {l:'\uD83C\uDF93 First-Gen Rural Student',t:'college is so different from back home. feel like i don\'t belong anywhere anymore. too different for both worlds. just tired'},
+  {l:'\uD83C\uDFED Rural PA Teen',t:'my dad\'s been out of work since the plant closed. everything feels heavy at home. i just stay quiet. don\'t see things getting better around here for anyone'},
+  {l:'\uD83C\uDF0A Sussex County DE',t:'nobody here really knows what i\'m going through. mi familia thinks i\'m fine but i\'m not. feel stuck between worlds and just real tired of pretending everything is okay'},
+];
+
+function init(){
+  var c=document.getElementById('strip');
+  S.forEach(function(s){
+    if(s.divider){
+      var d=document.createElement('div');
+      d.className='sc-div';
+      d.textContent=s.l;
+      c.appendChild(d);
+      return;
+    }
+    var b=document.createElement('button');
+    b.className='sc-btn';
+    b.textContent=s.l;
+    b.onclick=function(){
+      document.getElementById('vlap-ta').value=s.t;
+      document.querySelectorAll('.sc-btn').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      // On mobile, scroll to textarea
+      if(window.innerWidth<900){
+        setTimeout(function(){document.getElementById('vlap-ta').scrollIntoView({behavior:'smooth',block:'nearest'});},100);
+      }
+    };
+    c.appendChild(b);
+  });
+}
+
+function load(on){
+  var b=document.getElementById('run-btn');
+  b.disabled=on;
+  document.getElementById('btn-txt').innerHTML=on?'<div class="spinner"></div>&nbsp;Analyzing&hellip;':'Analyze with VLAP &rarr;';
+}
+
+function sc(code){
+  var c=(code||'').toUpperCase();
+  if(c.startsWith('SHA'))return 'sig-sha';
+  if(c.startsWith('CRS'))return 'sig-crs';
+  if(c.startsWith('HOP'))return 'sig-hop';
+  if(c.startsWith('ISO'))return 'sig-iso';
+  return 'sig-ccm';
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function render(d){
+  document.getElementById('res-time').textContent=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  var sv=Math.max(0,Math.min(1,d.risk_score||0)),tier=d.risk_tier||'clear',sigs=d.signals||[];
+  var fc,tc,tb,tl,ac,ai;
+  if(tier==='crisis'){fc='#903038';tc='#903038';tb='rgba(160,48,56,0.07)';tl='Crisis \u2014 90-min SLA';ac='ac-crisis';ai='&#9888;';}
+  else if(tier==='high'){fc='#905030';tc='#905030';tb='rgba(170,88,40,0.07)';tl='High Risk \u2014 Review';ac='ac-high';ai='&#128203;';}
+  else if(tier==='moderate'){fc='#7A4830';tc='#7A4830';tb='rgba(180,120,90,0.09)';tl='Monitor';ac='ac-moderate';ai='&#128065;';}
+  else{fc='#1A5848';tc='#1A5848';tb='rgba(35,98,80,0.07)';tl='Clear';ac='ac-clear';ai='&#10003;';}
+  var sh=sigs.length===0?'<span class="sig sig-none">No signals detected</span>':
+    sigs.map(function(s){return '<span class="sig '+sc(s.code)+'">'+(s.code||'')+' &mdash; '+(s.label||'')+'</span>';}).join('');
+  var html=
+    '<div class="risk-row">'+
+      '<div class="risk-track"><div class="risk-fill" style="width:'+Math.round(sv*100)+'%;background:'+fc+';"></div></div>'+
+      '<div class="risk-score" style="color:'+tc+';">'+Math.round(sv*100)+'</div>'+
+      '<div class="tier-pill" style="color:'+tc+';border-color:'+tc+';background:'+tb+';">'+tl+'</div>'+
+    '</div>'+
+    '<div class="sig-lbl">Signals Detected</div>'+
+    '<div class="sigs">'+sh+'</div>'+
+    (d.cultural_context?'<div class="ibox ibox-c"><div class="ibox-lbl">Cultural Context</div><div class="ibox-txt">'+esc(d.cultural_context)+'</div></div>':'')+
+    (d.member_response?'<div class="ibox ibox-m"><div class="ibox-lbl">Member Response \u2014 AI Invisible</div><div class="ibox-txt">'+esc(d.member_response)+'</div></div>':'')+
+    (d.recommended_action?'<div class="abox '+ac+'">'+ai+' '+esc(d.recommended_action)+'</div>':'');
+  document.getElementById('out').innerHTML=html;
+  // On mobile, scroll to results
+  if(window.innerWidth<900){
+    setTimeout(function(){document.getElementById('out').scrollIntoView({behavior:'smooth',block:'start'});},200);
+  }
+}
+
+function err(m){
+  document.getElementById('out').innerHTML=
+    '<div class="ebox">'+esc(m)+'</div>'+
+    '<div class="placeholder" style="min-height:140px;"><div class="ph-t">Please try again or contact<br>hello@vaslhealth.com</div></div>';
+}
+
+async function run(){
+  var t=document.getElementById('vlap-ta').value.trim();
+  if(!t){document.getElementById('vlap-ta').focus();return;}
+  load(true);
+  try{
+    var r=await fetch('/.netlify/functions/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})});
+    if(!r.ok){var e={};try{e=await r.json();}catch(x){}err('API error '+r.status+': '+(e.error||'Please try again.'));load(false);return;}
+    var data=await r.json();
+    if(data&&typeof data.risk_score!=='undefined'&&data.risk_tier){render(data);load(false);return;}
+    var raw=(data.content&&data.content[0]&&data.content[0].text)||'';
+    raw=raw.replace(/```json|```/g,'').trim();
+    var p;
+    try{p=JSON.parse(raw);}catch(x){
+      var m=raw.match(/\{[\s\S]*\}/);
+      if(m){try{p=JSON.parse(m[0]);}catch(x2){err('Could not parse output. Please try again.');load(false);return;}}
+      else{err('Unexpected response. Please try again.');load(false);return;}
+    }
+    render(p);
+  }catch(x){err('Network error: '+(x.message||'Check your connection and try again.'));}
+  load(false);
+}
+
+init();
+document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key==='Enter')run();});
+</script>
+</body>
+</html>

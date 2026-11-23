@@ -27,3 +27,5 @@ jobs:
             git reset --hard origin/main
             git clean -ffd
             cp -a site/. .
+            mkdir -p ./vlap
+            cp -a vlap/. ./vlap/
