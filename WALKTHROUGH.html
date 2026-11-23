@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vasl Health — Site Walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --warm-white:#FAF7F2;--parchment:#F0EAE0;--ink:#1C1C1C;
+  --clay:#C4896F;--deep-green:#2D4A3E;--dust:#8B7B6B;--chalk:#E2DAD0;--charcoal:#222222;
+  --serif:'Newsreader',Georgia,serif;--sans:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace;
+}
+body{background:var(--charcoal);color:var(--warm-white);font-family:var(--sans);min-height:100vh;}
+.progress-bar{height:3px;background:rgba(250,247,242,0.06);position:fixed;top:0;left:0;right:0;z-index:200;}
+.progress-fill{height:100%;background:var(--clay);width:0%;transition:width 0.2s;}
+.wt-header{padding:48px 6vw 40px;border-bottom:1px solid rgba(250,247,242,0.10);display:flex;align-items:flex-end;justify-content:space-between;gap:40px;background:var(--charcoal);position:sticky;top:0;z-index:100;}
+.wt-logo{font-family:var(--serif);font-size:28px;font-weight:300;letter-spacing:-0.03em;}
+.wt-logo span{color:var(--clay);font-style:italic;}
+.wt-subtitle{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(250,247,242,0.35);margin-top:6px;}
+.wt-count{font-family:var(--serif);font-size:40px;font-weight:300;color:var(--warm-white);line-height:1;letter-spacing:-0.03em;text-align:right;}
+.wt-count-label{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,247,242,0.30);margin-top:4px;text-align:right;}
+.wt-body{padding:0 6vw 80px;}
+.wt-section{padding-top:56px;}
+.wt-section-header{display:flex;align-items:baseline;gap:16px;padding-bottom:18px;border-bottom:1px solid rgba(250,247,242,0.10);}
+.wt-section-label{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--clay);}
+.wt-section-count{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,247,242,0.25);}
+.page-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
+.page-card{padding:22px 22px 44px 0;border-right:1px solid rgba(250,247,242,0.08);border-bottom:1px solid rgba(250,247,242,0.08);text-decoration:none;display:block;transition:background 0.18s;position:relative;}
+.page-card:nth-child(4n){border-right:none;padding-right:0;}
+.page-card:nth-child(n+2){padding-left:22px;}
+.page-card:nth-child(4n+1){padding-left:0;}
+.page-card:hover{background:rgba(250,247,242,0.05);}
+.pc-num{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,247,242,0.18);margin-bottom:10px;}
+.pc-badge{display:inline-block;font-family:var(--mono);font-size:7px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;margin-bottom:10px;}
+.badge-core{background:rgba(45,74,62,0.35);color:rgba(122,184,130,0.85);}
+.badge-legal{background:rgba(196,137,111,0.18);color:var(--clay);}
+.badge-help{background:rgba(250,247,242,0.07);color:rgba(250,247,242,0.40);}
+.badge-proto{background:rgba(45,74,62,0.5);color:rgba(150,210,160,0.95);}
+.pc-name{font-family:var(--serif);font-size:19px;font-weight:300;color:var(--warm-white);margin-bottom:5px;line-height:1.2;letter-spacing:-0.01em;}
+.pc-url{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;color:var(--clay);margin-bottom:10px;}
+.pc-desc{font-size:12px;font-weight:300;color:rgba(250,247,242,0.38);line-height:1.6;}
+.pc-arrow{position:absolute;bottom:18px;right:18px;font-family:var(--mono);font-size:13px;color:rgba(250,247,242,0.12);transition:color 0.18s;}
+.page-card:hover .pc-arrow{color:var(--clay);}
+.wt-summary{margin-top:56px;padding:36px 40px;background:rgba(250,247,242,0.04);border:1px solid rgba(250,247,242,0.08);display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
+.ws-item{padding:0 32px 0 0;border-right:1px solid rgba(250,247,242,0.08);}
+.ws-item:last-child{border-right:none;padding-right:0;padding-left:32px;}
+.ws-item:nth-child(n+2){padding-left:32px;}
+.ws-num{font-family:var(--serif);font-size:40px;font-weight:300;color:var(--warm-white);line-height:1;letter-spacing:-0.04em;margin-bottom:6px;}
+.ws-label{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,247,242,0.28);}
+@media(max-width:1100px){.page-grid{grid-template-columns:repeat(3,1fr);}.page-card:nth-child(4n){border-right:1px solid rgba(250,247,242,0.08);padding-right:22px;}.page-card:nth-child(3n){border-right:none;padding-right:0;}.wt-summary{grid-template-columns:1fr 1fr;gap:28px;}.ws-item{border-right:none;padding:0;}}
+@media(max-width:768px){.page-grid{grid-template-columns:1fr 1fr;}.wt-header{flex-direction:column;align-items:flex-start;}.wt-count,.wt-count-label{text-align:left;}.page-card:nth-child(3n){border-right:1px solid rgba(250,247,242,0.08);}.page-card:nth-child(2n){border-right:none;}}
+@media(max-width:480px){.page-grid{grid-template-columns:1fr;}.page-card{padding:18px 0 40px;border-right:none !important;}.wt-summary{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<div class="wt-header">
+  <div>
+    <div class="wt-logo">Vasl <span>Health</span></div>
+    <div class="wt-subtitle">Site Walkthrough — May 2026 Rebuild</div>
+  </div>
+  <div>
+    <div class="wt-count">30</div>
+    <div class="wt-count-label">Pages in this build</div>
+  </div>
+</div>
+
+<div class="wt-body">
+
+  <!-- MAIN SITE -->
+  <div class="wt-section">
+    <div class="wt-section-header">
+      <span class="wt-section-label">Main Site</span>
+      <span class="wt-section-count">20 pages</span>
+    </div>
+    <div class="page-grid">
+      <a href="site/index.html" class="page-card" target="_blank"><div class="pc-num">01</div><div class="pc-badge badge-core">Homepage</div><div class="pc-name">Homepage</div><div class="pc-url">/</div><div class="pc-desc">Full hero, care model, VLAP intro, outcomes, pricing overview, testimonials, CTA</div><div class="pc-arrow">→</div></a>
+      <a href="site/about.html" class="page-card" target="_blank"><div class="pc-num">02</div><div class="pc-badge badge-core">Core</div><div class="pc-name">About</div><div class="pc-url">/about</div><div class="pc-desc">Mission, origin story, "Therapy Last" philosophy, Delaware PBC structure</div><div class="pc-arrow">→</div></a>
+      <a href="site/platform.html" class="page-card" target="_blank"><div class="pc-num">03</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Platform</div><div class="pc-url">/platform</div><div class="pc-desc">Five-step care continuum, full feature breakdown, four portal overview</div><div class="pc-arrow">→</div></a>
+      <a href="site/ai-model.html" class="page-card" target="_blank"><div class="pc-num">04</div><div class="pc-badge badge-core">Core</div><div class="pc-name">AI Model</div><div class="pc-url">/ai-model</div><div class="pc-desc">Marketing-facing VLAP page — how the model works, what it detects, clinical framing</div><div class="pc-arrow">→</div></a>
+      <a href="site/technology.html" class="page-card" target="_blank"><div class="pc-num">05</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Technology</div><div class="pc-url">/technology</div><div class="pc-desc">Institutional CulturalBERT-VLAP — 9 chapters, architecture, signal taxonomy, IRB validation, partnerships</div><div class="pc-arrow">→</div></a>
+      <a href="site/vlap.html" class="page-card" target="_blank"><div class="pc-num">06</div><div class="pc-badge badge-core">Core</div><div class="pc-name">VLAP</div><div class="pc-url">/vlap</div><div class="pc-desc">VLAP product page — standalone deep dive on the language analysis platform</div><div class="pc-arrow">→</div></a>
+      <a href="site/peer-groups.html" class="page-card" target="_blank"><div class="pc-num">07</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Peer Groups</div><div class="pc-url">/peer-groups</div><div class="pc-desc">Community-first model, how peer groups work, moderation structure</div><div class="pc-arrow">→</div></a>
+      <a href="site/teletherapy.html" class="page-card" target="_blank"><div class="pc-num">08</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Teletherapy</div><div class="pc-url">/teletherapy</div><div class="pc-desc">Clinical care tier — warm handoff, "Therapy Last" context, crisis protocol</div><div class="pc-arrow">→</div></a>
+      <a href="site/for-schools.html" class="page-card" target="_blank"><div class="pc-num">09</div><div class="pc-badge badge-core">Core</div><div class="pc-name">For Schools</div><div class="pc-url">/for-schools</div><div class="pc-desc">K-12 and Title I — counselor ratios, Medicaid math (~$38/student/yr net), FERPA</div><div class="pc-arrow">→</div></a>
+      <a href="site/for-organizations.html" class="page-card" target="_blank"><div class="pc-num">10</div><div class="pc-badge badge-core">Core</div><div class="pc-name">For Organizations</div><div class="pc-url">/for-organizations</div><div class="pc-desc">Universities, health plans, community health centers, non-profits — 4 segment value props</div><div class="pc-arrow">→</div></a>
+      <a href="site/outcomes.html" class="page-card" target="_blank"><div class="pc-num">11</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Outcomes</div><div class="pc-url">/outcomes</div><div class="pc-desc">ROI by stakeholder, cost comparison, population outcomes, Medicaid PMPM context</div><div class="pc-arrow">→</div></a>
+      <a href="site/clinical-outcomes.html" class="page-card" target="_blank"><div class="pc-num">12</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Clinical Outcomes</div><div class="pc-url">/clinical-outcomes</div><div class="pc-desc">79.5% retention · 42% PHQ-8 · ~94% VLAP sensitivity — verified figures, IRB caveated, honest methodology</div><div class="pc-arrow">→</div></a>
+      <a href="site/prototype.html" class="page-card" target="_blank"><div class="pc-num">13</div><div class="pc-badge badge-proto">5 Portals</div><div class="pc-name">Platform Prototype</div><div class="pc-url">/prototype</div><div class="pc-desc">Interactive demo — Member App, Coach Portal, Clinician View, Org Dashboard, Super Admin Dashboard</div><div class="pc-arrow">→</div></a>
+      <a href="site/team.html" class="page-card" target="_blank"><div class="pc-num">14</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Team</div><div class="pc-url">/team</div><div class="pc-desc">Rodney Bell, Kacy Keys, Paula Bruce PhD, clinical leadership, advisors including Dr. Galiatsatos</div><div class="pc-arrow">→</div></a>
+      <a href="site/careers.html" class="page-card" target="_blank"><div class="pc-num">15</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Careers</div><div class="pc-url">/careers</div><div class="pc-desc">Open roles, culture, DEI commitment, Delaware PBC mission framing</div><div class="pc-arrow">→</div></a>
+      <a href="site/pricing.html" class="page-card" target="_blank"><div class="pc-num">16</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Pricing</div><div class="pc-url">/pricing</div><div class="pc-desc">Starter $480 · Pro $1,200 · Enterprise custom — plus $3–5 or $6–8 PMPM — full comparison table — Medicaid math</div><div class="pc-arrow">→</div></a>
+      <a href="site/blog.html" class="page-card" target="_blank"><div class="pc-num">17</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Blog / Insights</div><div class="pc-url">/blog</div><div class="pc-desc">Editorial masthead, 6 real articles, working category filter, featured article with verified stats</div><div class="pc-arrow">→</div></a>
+      <a href="site/contact.html" class="page-card" target="_blank"><div class="pc-num">18</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Contact</div><div class="pc-url">/contact</div><div class="pc-desc">6 email channels, demo request form (needs Formspree), corrected FAQ — no address, no phone</div><div class="pc-arrow">→</div></a>
+      <a href="site/research.html" class="page-card" target="_blank"><div class="pc-num">19</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Research</div><div class="pc-url">/research</div><div class="pc-desc">UMD IRB study · Mayo Clinic Platform_Accelerate · Johns Hopkins only — all fabricated studies removed</div><div class="pc-arrow">→</div></a>
+      <a href="site/support.html" class="page-card" target="_blank"><div class="pc-num">20</div><div class="pc-badge badge-core">Core</div><div class="pc-name">Help Center</div><div class="pc-url">/support</div><div class="pc-desc">Help hub with category navigation, search UI, featured articles, links to all 7 help articles</div><div class="pc-arrow">→</div></a>
+    </div>
+  </div>
+
+  <!-- LEGAL -->
+  <div class="wt-section">
+    <div class="wt-section-header">
+      <span class="wt-section-label">Legal</span>
+      <span class="wt-section-count">3 pages</span>
+    </div>
+    <div class="page-grid">
+      <a href="site/privacy.html" class="page-card" target="_blank"><div class="pc-num">21</div><div class="pc-badge badge-legal">Legal</div><div class="pc-name">Privacy Policy</div><div class="pc-url">/privacy</div><div class="pc-desc">HIPAA · FERPA · SOC 2 — fake SF address removed, VLAP in-memory processing explained correctly, © 2026</div><div class="pc-arrow">→</div></a>
+      <a href="site/terms.html" class="page-card" target="_blank"><div class="pc-num">22</div><div class="pc-badge badge-legal">Legal</div><div class="pc-name">Terms of Service</div><div class="pc-url">/terms</div><div class="pc-desc">13 sections — Maryland law, AAA arbitration — "Vernacular" corrected to "Vasl", all placeholders removed</div><div class="pc-arrow">→</div></a>
+      <a href="site/baa.html" class="page-card" target="_blank"><div class="pc-num">23</div><div class="pc-badge badge-legal">Legal</div><div class="pc-name">BAA</div><div class="pc-url">/baa</div><div class="pc-desc">Full HIPAA Business Associate Agreement — request flow, standard template, DocuSign execution, signature blocks</div><div class="pc-arrow">→</div></a>
+    </div>
+  </div>
+
+  <!-- HELP CENTER -->
+  <div class="wt-section">
+    <div class="wt-section-header">
+      <span class="wt-section-label">Help Center Articles</span>
+      <span class="wt-section-count">7 articles</span>
+    </div>
+    <div class="page-grid">
+      <a href="help/getting-started.html" class="page-card" target="_blank"><div class="pc-num">24</div><div class="pc-badge badge-help">Help</div><div class="pc-name">Getting Started</div><div class="pc-url">/help/getting-started</div><div class="pc-desc">Enrollment, onboarding, first check-in, coach introduction — member-facing</div><div class="pc-arrow">→</div></a>
+      <a href="help/vlap-technology.html" class="page-card" target="_blank"><div class="pc-num">25</div><div class="pc-badge badge-help">Help</div><div class="pc-name">Understanding VLAP</div><div class="pc-url">/help/vlap-technology</div><div class="pc-desc">VLAP for coaches and clinicians — five dimensions, what it detects, what it doesn't do</div><div class="pc-arrow">→</div></a>
+      <a href="help/clinical.html" class="page-card" target="_blank"><div class="pc-num">26</div><div class="pc-badge badge-help">Help</div><div class="pc-name">VLAP Before Sessions</div><div class="pc-url">/help/clinical</div><div class="pc-desc">Pre-session VLAP context panel workflow — clinician-facing, step-by-step</div><div class="pc-arrow">→</div></a>
+      <a href="help/compliance.html" class="page-card" target="_blank"><div class="pc-num">27</div><div class="pc-badge badge-help">Help</div><div class="pc-name">HIPAA and Your Data</div><div class="pc-url">/help/compliance</div><div class="pc-desc">How member data is protected, what VLAP stores, FERPA for schools, BAA process</div><div class="pc-arrow">→</div></a>
+      <a href="help/assessments.html" class="page-card" target="_blank"><div class="pc-num">28</div><div class="pc-badge badge-help">Help</div><div class="pc-name">Assessment Results</div><div class="pc-url">/help/assessments</div><div class="pc-desc">PHQ-8 and GAD-7 interpretation, cultural limitations, what coaches vs. clinicians see</div><div class="pc-arrow">→</div></a>
+      <a href="help/billing.html" class="page-card" target="_blank"><div class="pc-num">29</div><div class="pc-badge badge-help">Help</div><div class="pc-name">Medicaid Billing</div><div class="pc-url">/help/billing</div><div class="pc-desc">CPT codes, billing workflow, Medicaid math corrected to ~$38/student/year net — finance director audience</div><div class="pc-arrow">→</div></a>
+      <a href="help/technical.html" class="page-card" target="_blank"><div class="pc-num">30</div><div class="pc-badge badge-help">Help</div><div class="pc-name">System Requirements</div><div class="pc-url">/help/technical</div><div class="pc-desc">Browsers, devices, connection requirements, portal-specific requirements, troubleshooting</div><div class="pc-arrow">→</div></a>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="wt-summary">
+    <div class="ws-item"><div class="ws-num">30</div><div class="ws-label">Total Pages Built</div></div>
+    <div class="ws-item"><div class="ws-num">5</div><div class="ws-label">Interactive Portals</div></div>
+    <div class="ws-item"><div class="ws-num">0</div><div class="ws-label">Fabricated Claims</div></div>
+    <div class="ws-item"><div class="ws-num">2026</div><div class="ws-label">Copyright Year</div></div>
+  </div>
+
+</div>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progress').style.width = Math.min(pct, 100) + '%';
+  });
+</script>
+</body>
+</html>
