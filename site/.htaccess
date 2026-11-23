@@ -1,0 +1,15 @@
+DirectoryIndex index.html
+
+Options -Indexes
+
+RewriteEngine On
+
+# Redirect requests with a trailing slash to their canonical URL.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+# Serve extensionless clean URLs.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+RewriteRule ^(.+)$ /$1.html [END]

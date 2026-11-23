@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to gotovasl.abzal.net
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy production repository
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || '22' }}
+          script_stop: true
+          script: |
+            set -e
+            cd /home/wits/web/gotovasl.abzal.net/public_html
+            git fetch --prune origin
+            git reset --hard origin/main
+            git clean -ffd
+            cp -a site/. .
