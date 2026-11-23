@@ -1,5 +1,5 @@
 // Netlify Function for the VLAP v0.2 demo.
-// Proxies requests to Anthropic so ANTHROPIC_API_KEY remains server-side.
+// Proxies requests to Groq so GROQ_API_KEY remains server-side.
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -47,7 +47,7 @@ exports.handler = async function handler(event) {
     return json(405, { error: 'Method not allowed' });
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     return json(500, { error: 'API key not configured' });
   }
@@ -65,27 +65,29 @@ exports.handler = async function handler(event) {
   }
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'openai/gpt-oss-20b',
         max_tokens: 1024,
-        system: SYSTEM,
-        messages: [{ role: 'user', content: message }],
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: SYSTEM },
+          { role: 'user', content: message },
+        ],
       }),
     });
 
     const data = await resp.json();
     if (!resp.ok) {
-      return json(resp.status, { error: data?.error?.message || 'Anthropic API error' });
+      return json(resp.status, { error: data?.error?.message || 'Groq API error' });
     }
 
-    const raw = data?.content?.[0]?.text || '';
+    const raw = data?.choices?.[0]?.message?.content || '';
     const clean = raw.replace(/```json|```/g, '').trim();
 
     let parsed;
